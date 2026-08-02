@@ -1,0 +1,331 @@
+.card,
+.flipcard {
+    border-radius: 9px;
+    display: flex;
+    width: 110px;
+    height: 200px;
+    background-color: #5190F5;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border: solid white 8px;
+    font-family: "Archivo";
+    position: relative;
+    box-shadow: 1px 1px 1px rgba(78, 77, 77, 0.9);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-20px);
+}
+
+.playArea {
+    position: relative;
+    left: 190px;
+    transition: none;
+}
+
+
+.flipcard,
+#colorcard {
+    background-color: black;
+    overflow: hidden;
+}
+
+.ovalflip,
+.oval,
+#colorcard .symbol1,
+#colorcard .symbol2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 42.5px / 85px;
+    transform: translate(-50%, -50%) rotate(35deg);
+    background-color: white;
+    width: 85px;
+    height: 170px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#colorcard {
+    position: relative;
+}
+
+#coloroval,
+#colorcard .symbol1,
+#colorcard .symbol2 {
+    width: 80px;
+    height: 160px;
+    border-radius: 50%;
+    border: white 8px solid;
+    background: conic-gradient(#FA2828 0deg 90deg,
+            #5190F5 90deg 180deg,
+            #61D45F 180deg 270deg,
+            #FFFC63 270deg 360deg);
+}
+
+#colorcard .symbol1,
+#colorcard .symbol2 {
+    width: 10px;
+    height: 30px;
+    border-radius: 50%;
+    border: 3px solid;
+}
+
+#colorcard .symbol1 {
+    top: 22px;
+    left: 20px;
+}
+
+#colorcard .symbol2 {
+    bottom: -10px;
+    right: -2px;
+    top: auto;
+}
+
+.ovalflip {
+    background-color: #FA2828;
+}
+
+.oval h1,
+.ovalflip h1 {
+    transform: rotate(-35deg);
+    display: flex;
+    font-size: 80px;
+    text-shadow: 2.5px 2.5px 0px rgba(0, 0, 0, 0.9);
+    font-style: italic;
+}
+
+.ovalflip h1 {
+    color: #FFFC63;
+    font-size: 40px;
+    transform: rotate(-52deg);
+    text-shadow: -4px 3px 0px rgba(0, 0, 0, 0.9);
+    letter-spacing: -3px;
+}
+
+body {
+    background-color: bisque;
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 40px;
+}
+
+.symbol1,
+.symbol2,
+#skip span i {
+    display: block;
+    font-size: 25px;
+    color: white;
+    text-shadow: 1.5px 1.5px 0px rgba(0, 0, 0, 0.9);
+    font-style: italic;
+    padding-left: 8px;
+    padding-top: 2px;
+}
+
+#skip span {
+    padding-left: 0px;
+}
+
+.symbol1,
+#skip .symbol1 {
+    margin-right: auto;
+}
+
+.symbol2,
+#skip .symbol2 {
+    margin-left: auto;
+    transform: rotate(180deg);
+}
+
+
+.t4container,
+.t2container {
+    width: 100%;
+    height: 100%;
+    transform: rotate(150deg);
+}
+
+.t4container div,
+.t2container div {
+    width: 25px;
+    height: 40px;
+    border: white solid 2px;
+    transform: skewX(-20deg);
+    position: absolute;
+}
+
+#t4 {
+    background-color: black;
+}
+
+.t2container div {
+    width: 30px;
+    height: 60px;
+}
+
+.t2container .t2-two {
+    bottom: 40px;
+    right: 40px;
+    box-shadow: 0px -2px 1px rgba(0, 0, 0, 0.5);
+}
+
+.t2container .t2-one {
+    bottom: 72px;
+    right: 10px;
+    box-shadow: 0px -2px 1px rgba(0, 0, 0, 0.5);
+}
+
+.c1 {
+    bottom: 86px;
+    right: 23px;
+    background-color: #FFFC63;
+    box-shadow: -2px -2px 1px rgba(0, 0, 0, 0.5);
+}
+
+.c2 {
+    bottom: 60px;
+    right: 48px;
+    background-color: #61D45F;
+    box-shadow: -2px -2px 1px rgba(0, 0, 0, 0.5);
+}
+
+.c3 {
+    bottom: 43px;
+    right: 30px;
+    background-color: #5190F5;
+    box-shadow: -2px -2px 1px rgba(0, 0, 0, 0.5);
+}
+
+.c4 {
+    bottom: 75px;
+    right: 4px;
+    background-color: #FA2828;
+    box-shadow: 0px -2px 1px rgba(0, 0, 0, 0.5);
+}
+
+.n6 span,
+.n6 h1,
+.n9 span,
+.n9 h1 {
+    text-decoration: underline;
+}
+
+#skip .oval i {
+    font-size: 60px;
+    transform: rotate(-45deg);
+    text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.9);
+}
+
+.oval .arrow1 {
+    position: absolute;
+    transform: scaleX(-1) rotate(270deg);
+    right: 18px;
+    bottom: 2px;
+    font-size: 60px;
+}
+
+.oval .arrow2 {
+    position: absolute;
+    transform: scaleX(-1) rotate(90deg);
+    left: 18px;
+    top: 1px;
+    font-size: 60px;
+}
+
+#reverse .symbol1 {
+    transform: rotate(-45deg);
+    padding: 2px;
+}
+
+#reverse .symbol2 {
+    transform: rotate(-45deg);
+    padding-right: 5px;
+}
+
+.dock {
+    position: relative;
+    width: 110px;
+    height: 200px;
+    left: 10px;
+    bottom: 20px;
+}
+
+.card1,
+.card2,
+.card3 {
+    background-color: white;
+    position: absolute;
+}
+
+.card1 {
+
+    top: 30px;
+
+}
+
+.card2 {
+    top: 20px;
+
+}
+
+.card3 {
+
+    top: 10px;
+
+}
+
+.uno {
+    position: absolute;
+    top: 0px;
+    z-index: 10;
+}
+
+.player1,
+.player2 {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    width: 500px;
+    height: 200px;
+    gap: 0;
+}
+
+.player2 {
+    transform: rotate(180deg);
+}
+
+.container2 {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    width: 500px;
+    height: 200px;
+
+}
+
+.notValid {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.chooseColor {
+    width: 300 px;
+    height: 50px;
+    display: none;
+    display: flex;
+    flex-direction: row;
+}
+
+.colors {
+    flex-direction: row;
+}
