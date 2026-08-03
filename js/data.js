@@ -186,4 +186,14 @@ export const card = [{
         </div>`,
     colored: false
 }
-]
+];
+export const colorPanel = `<div class="chooseColor">
+            <div class="message">
+                <h1>Choose a color</h1>
+            </div>
+        <div class="colors">
+        <div class="color"></div>
+        <div class="color"></div>
+        <div class="color"></div>
+        <div class="color"></div></div>
+    </div>`;

@@ -11,20 +11,22 @@
     border: solid white 8px;
     font-family: "Archivo";
     position: relative;
-    box-shadow: 1px 1px 1px rgba(78, 77, 77, 0.9);
+    box-shadow: 0px 0px 3px rgba(78, 77, 77, 0.9);
     cursor: pointer;
-    flex-shrink: 0;
+    margin-left: -5px;
     transition: transform 0.2s ease;
+    transform: scale(0.9);
+    flex-shrink: 0;
 }
 
 .card:hover {
-    transform: translateY(-20px);
+    transform: translateY(-10px);
 }
 
 .playArea {
     position: relative;
     left: 190px;
-    transition: none;
+    pointer-events: none;
 }
 
 
@@ -112,10 +114,10 @@ body {
     background-color: bisque;
     min-height: 90vh;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    gap: 40px;
+    gap: 150px;
 }
 
 .symbol1,
@@ -263,6 +265,7 @@ body {
 .card3 {
     background-color: white;
     position: absolute;
+    pointer-events: none;
 }
 
 .card1 {
@@ -289,18 +292,40 @@ body {
 }
 
 .player1,
-.player2 {
+.player2,
+.player3,
+.player4 {
     display: flex;
     justify-content: center;
     flex-direction: row;
-    width: 500px;
-    height: 200px;
+    width: 650px;
+    height: 190px;
     gap: 0;
 }
 
 .player2 {
     transform: rotate(180deg);
 }
+
+.player3 {
+    transform: rotate(90deg);
+    border: black solid 5px;
+}
+
+.player4 {
+    transform: rotate(-90deg);
+    border: black solid 5px;
+}
+
+.horizontal {
+    width: 700px;
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
 
 .container2 {
     display: flex;
@@ -319,13 +344,37 @@ body {
 }
 
 .chooseColor {
-    width: 300 px;
-    height: 50px;
-    display: none;
+    width: 400px;
+    height: 200px;
+    display: flex;
+    position: fixed;
+    flex-direction: column;
+    z-index: 10;
+    text-align: center;
+    background: linear-gradient(to left, rgba(245, 192, 39, 0.8), rgba(247, 218, 133, 0.8));
+    border-radius: 10px;
+    padding: 10px;
+    font-family: "Verdana";
+    color: rgba(40, 14, 41, 0.87);
+
+}
+
+.colors {
+    width: 400px;
+    height: 100px;
     display: flex;
     flex-direction: row;
 }
 
-.colors {
-    flex-direction: row;
+.color {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.color:hover {
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+
 }
