@@ -11,6 +11,8 @@ const player1 = document.querySelector(".player1");
 const playArea = document.querySelector(".playArea");
 const dock = document.querySelector(".dock");
 const playButton = document.querySelector(".play");
+const cardSound = new Audio("./js/card.mp3");
+cardSound.volume = 0.6;
 
 function distributeCards(num, destination) {
     for (let i = 0; i < num; i++) {
@@ -190,6 +192,7 @@ function changeTurn() {
     turn = (turn + 1) % players.length;
 }
 function handleNoValidCard() {
+    cardSound.play();
     distributeCards(1, players[turn]);
     const addedCard = players[turn].cards[players[turn].cards.length - 1];
     if (validateCard(addedCard)) {
@@ -268,6 +271,7 @@ function handleNextTurn() {
     else return;
 }
 function startFlow(card) {
+    cardSound.play();
     if (card.id === "t4" || card.id === "colorCard") {
         chooseColor((selectedColor) => {
             card.color = selectedColor;
