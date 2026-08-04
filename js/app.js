@@ -1,12 +1,12 @@
-import { card, colorPanel } from "./data.js";
+import { card } from "./data.js";
 const players = [{ name: "human", cards: [] }, { name: "computer", cards: [] }];
 const colors = ["#FA2828", "#5190F5", "#FFFC63", "#61D45F"];
 let playAreaCard = { name: "playArea" };
 let turn = 0;
 let winner = false;
 let saveWinner = 0;
+let animation = false;
 const player1 = document.querySelector(".player1");
-const player2 = document.querySelector(".player2");
 const playArea = document.querySelector(".playArea");
 const dock = document.querySelector(".dock");
 
@@ -44,12 +44,11 @@ function createCard(cardId, color = null) {
 
 }
 function updateBoard() {
-    player1.innerHTML = "";
-    player2.innerHTML = "";
     playArea.innerHTML = "";
     players.forEach((player, index) => {
         const domPlayer = document.querySelector(`.player${index + 1}`);
-        player.cards.forEach((card) => {
+        domPlayer.innerHTML = "";
+        player.cards.forEach((card, cardIndex) => {
             let cardElement = "";
             if (player.name === "computer") {
                 cardElement = createCard("filpedCard");
@@ -59,14 +58,13 @@ function updateBoard() {
                 if (!validateCard(card) && player.name === "human") {
                     cardElement.classList.add("notValid");
                 }
-                cardElement.dataset.id = card.id;
-                cardElement.dataset.color = card.color;
                 cardElement.addEventListener("click", handleCardClick);
             }
+            cardElement.dataset.id = card.id;
+            cardElement.dataset.color = card.color;
             if (player.cards.length * 110 > 700) {
                 const overlap = (player.cards.length * 110 - 700) / (player.cards.length - 1);
                 cardElement.style.marginLeft = `-${overlap}px`;
-                console.log(overlap);
             }
 
             console.log(index + 1, domPlayer.className);
@@ -90,15 +88,54 @@ function handleCardClick(event) {
     const clickedCard = event.target.closest(".card").dataset;
     const findCard = players[turn].cards.find((card) => ((card.id === parseInt(clickedCard.id) || card.id === clickedCard.id)
         && String(card.color) === String(clickedCard.color)));
-    console.log("I am found", findCard);
     startFlow(findCard);
+    if (players[turn].name !== "human") {
+        player1.classList.add("notValid");
+        dock.classList.add("notValid2");
+        setTimer();
+    }
 
 }
 function play(card) {
     const selectedCard = card;
-    const cardIndex = players[turn].cards.findIndex((c) => c.id === selectedCard.id && c.color === selectedCard.color);
     checkForWinner();
     console.log("player " + turn);
+    const cardIndex = players[turn].cards.findIndex((c) => c.id === selectedCard.id && c.color === selectedCard.color);
+
+    let movingCard = "";
+    let movingCardToappend = "";
+
+    if (players[turn].name === "computer") {
+        movingCard = document.querySelector(`.player${turn + 1} .flipcard[data-id="${card.id}"]`);
+        movingCardToappend = createCard(card.id, card.color);
+    }
+    else if (animation) {
+        movingCard = dock;
+        movingCardToappend = createCard(card.id, card.color);
+        animation = false;
+    }
+    else {
+        movingCard = document.querySelector(`.player${turn + 1} .card[data-id="${card.id}"]`);
+        movingCardToappend = movingCard;
+    }
+    console.log("I'm supposeed to move ", movingCardToappend);
+    const playRect = playArea.getBoundingClientRect();
+    const startRect = movingCard.getBoundingClientRect();
+    document.body.appendChild(movingCardToappend);
+
+    movingCardToappend.style.position = "fixed";
+    movingCardToappend.style.left = startRect.left + "px";
+    movingCardToappend.style.top = startRect.top + "px";
+    requestAnimationFrame(() => {
+        movingCardToappend.style.left = playRect.left + "px";
+        movingCardToappend.style.top = playRect.top + "px";
+    });
+
+    movingCardToappend.addEventListener("transitionend", () => {
+        updateBoard();
+        movingCardToappend.remove();
+    });
+
     players[turn].cards.splice(cardIndex, 1);
     console.log(players[turn].cards);
     switch (selectedCard.id) {
@@ -133,6 +170,7 @@ function handleNoValidCard() {
     const addedCard = players[turn].cards[players[turn].cards.length - 1];
     if (validateCard(addedCard)) {
         console.log(" I'm in novalid play " + turn);
+        animation = true;
         startFlow(addedCard);
     }
     else {
@@ -146,20 +184,19 @@ function handleNoValidCard() {
 function chooseColor(onColorChosen) {
     let chosenColor = "";
     if (players[turn].name === "human") {
-        const creatediaplay = document.createElement("div");
-        creatediaplay.innerHTML = colorPanel;
-        const display = creatediaplay.firstElementChild;
-        const colorsRow = display.querySelectorAll(".color");
-
+        const colorsRow = document.querySelectorAll(".color");
+        console.log(colorsRow);
         colorsRow.forEach((color, index) => {
             color.style.backgroundColor = colors[index];
             color.addEventListener("click", () => {
                 chosenColor = colors[index];
+                console.log("hey:", chosenColor);
+
                 onColorChosen(chosenColor);
-                color.closest(".chooseColor").remove();
+                color.closest(".chooseColor").classList.add("hidden");
             });
         });
-        document.body.appendChild(display);
+        document.querySelector(".chooseColor").classList.remove("hidden");
     }
     else {
         chosenColor = colors[Math.floor(Math.random() * colors.length)];
@@ -168,14 +205,12 @@ function chooseColor(onColorChosen) {
 
 }
 function automatedPlayer() {
-    player1.classList.add("notValid");
-    dock.classList.add("notValid");
     const findValidCard = players[turn].cards.find((card) => validateCard(card));
     if (findValidCard === undefined) handleNoValidCard();
     else { startFlow(findValidCard); }
     if (players[turn].name === "human") {
         player1.classList.remove("notValid");
-        dock.classList.remove("notValid");
+        dock.classList.remove("notValid2");
         setTimeout(() => {
             updateBoard();
         }, 500);
@@ -214,7 +249,7 @@ function setTimer() {
 
         setTimeout(() => {
             handleNextTurn();
-        }, 500);
+        }, 800);
 
     }, 800);
 }

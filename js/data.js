@@ -1,6 +1,6 @@
 export const card = [{
     id: 0,
-    html: `<div class="card" id="n0">
+    html: `<div class="card" id="0">
             <span class="symbol1">0</span>
             <div class="oval">
                 <h1>0</h1>
@@ -187,13 +187,3 @@ export const card = [{
     colored: false
 }
 ];
-export const colorPanel = `<div class="chooseColor">
-            <div class="message">
-                <h1>Choose a color</h1>
-            </div>
-        <div class="colors">
-        <div class="color"></div>
-        <div class="color"></div>
-        <div class="color"></div>
-        <div class="color"></div></div>
-    </div>`;
