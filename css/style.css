@@ -115,11 +115,12 @@ body {
     background-color: bisque;
     min-height: 90vh;
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-    gap: 150px;
+
 }
+
+
 
 .symbol1,
 .symbol2,
@@ -309,14 +310,13 @@ body {
     transform: rotate(180deg);
 }
 
-.player4 {
+.player3 {
     transform: rotate(90deg);
-    border: black solid 5px;
 }
 
-.player3 {
+.player4 {
     transform: rotate(-90deg);
-    border: black solid 5px;
+
 }
 
 .horizontal {
@@ -384,6 +384,68 @@ body {
 .color:hover {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 
+}
+
+
+.dashboard {
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: fixed;
+    background: linear-gradient(to left, rgba(245, 192, 39, 0.5), rgba(247, 218, 133, 0.5));
+    z-index: 10;
+    padding: 10px;
+    font-family: "Verdana";
+    color: rgba(40, 14, 41, 0.87);
+}
+
+
+.dashcontainer {
+    width: 600px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFC63;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+.options {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+}
+
+.choice {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+input[type="number"] {
+    width: 150px;
+    height: 60px;
+    font-size: 28px;
+    text-align: center;
+    color: #5190F5;
+}
+
+.play {
+    width: 120px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #5190F5;
+    font-size: 30px;
+    cursor: pointer;
 }
 
 .hidden {

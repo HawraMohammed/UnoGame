@@ -1,18 +1,21 @@
 import { card } from "./data.js";
-const players = [{ name: "human", cards: [] }, { name: "computer", cards: [] }];
+const players = [{ name: "human", cards: [] }];
 const colors = ["#FA2828", "#5190F5", "#FFFC63", "#61D45F"];
 let playAreaCard = { name: "playArea" };
 let turn = 0;
 let winner = false;
 let saveWinner = 0;
 let animation = false;
+let uid = 0;
 const player1 = document.querySelector(".player1");
 const playArea = document.querySelector(".playArea");
 const dock = document.querySelector(".dock");
+const playButton = document.querySelector(".play");
 
 function distributeCards(num, destination) {
     for (let i = 0; i < num; i++) {
         const randCard = card[Math.floor(Math.random() * (card.length - 1))];
+        uid++;
         let color = null;
         if (randCard.colored) {
             color = colors[Math.floor(Math.random() * colors.length)];
@@ -21,18 +24,20 @@ function distributeCards(num, destination) {
             destination.id = randCard.id;
             destination.color = color;
         }
-        else destination.cards.push({ id: randCard.id, color: color });
+        else destination.cards.push({ id: randCard.id, color: color, uid: uid });
     }
 }
 function validateCard(card) {
     return (card.id === playAreaCard.id || card.color === playAreaCard.color || card.id === "t4" || card.id === "colorCard");
 
 }
-function createCard(cardId, color = null) {
+function createCard(cardId, color = null, uid = null
+) {
     const cardElement = document.createElement("div");
     cardElement.innerHTML = card.find((c) => c.id === cardId).html;
     const cardwrapper = cardElement.firstElementChild;
-    if (color !== null) {
+
+    if (color !== null && cardId !== "filpedCard") {
         cardwrapper.style.backgroundColor = color;
         cardwrapper.style.color = color;
         if (cardId === "t2") {
@@ -40,6 +45,9 @@ function createCard(cardId, color = null) {
             cardwrapper.querySelector(".t2-two").style.backgroundColor = color;
         }
     }
+    cardwrapper.dataset.id = cardId;
+    cardwrapper.dataset.color = color;
+    cardwrapper.dataset.uid = uid;
     return cardwrapper;
 
 }
@@ -51,17 +59,16 @@ function updateBoard() {
         player.cards.forEach((card, cardIndex) => {
             let cardElement = "";
             if (player.name === "computer") {
-                cardElement = createCard("filpedCard");
+                cardElement = createCard("filpedCard", card.color, card.uid);
             }
             else {
-                cardElement = createCard(card.id, card.color);
+                cardElement = createCard(card.id, card.color, card.uid);
                 if (!validateCard(card) && player.name === "human") {
                     cardElement.classList.add("notValid");
                 }
                 cardElement.addEventListener("click", handleCardClick);
             }
-            cardElement.dataset.id = card.id;
-            cardElement.dataset.color = card.color;
+
             if (player.cards.length * 110 > 700) {
                 const overlap = (player.cards.length * 110 - 700) / (player.cards.length - 1);
                 cardElement.style.marginLeft = `-${overlap}px`;
@@ -73,8 +80,17 @@ function updateBoard() {
     });
     playArea.appendChild(createCard(playAreaCard.id, playAreaCard.color));
 }
-function init(num = 6) {
-
+function init(num, playerNum) {
+    if (playerNum === 2) {
+        document.querySelector(".player2").classList.remove("hidden");
+        players.push({ name: "computer", cards: [] });
+    }
+    else {
+        for (let i = 0; i < playerNum - 1; i++) {
+            players.push({ name: "computer", cards: [] });
+            document.querySelector(`.player${i + 2}`).classList.remove("hidden");
+        }
+    }
     distributeCards(1, playAreaCard);
     while (!parseInt(playAreaCard.id)) { distributeCards(1, playAreaCard); }
 
@@ -82,12 +98,18 @@ function init(num = 6) {
         distributeCards(num, player);
     });
     updateBoard();
+    document.querySelector(".dashboard").classList.add("hidden");
+
 }
 
 function handleCardClick(event) {
+
     const clickedCard = event.target.closest(".card").dataset;
-    const findCard = players[turn].cards.find((card) => ((card.id === parseInt(clickedCard.id) || card.id === clickedCard.id)
-        && String(card.color) === String(clickedCard.color)));
+
+    const findCard = players[turn].cards.find((card) => (String(card.uid) === String(clickedCard.uid)));
+    console.log("iam the clicked ", findCard);
+    console.log("clicked uid:", clickedCard.uid);
+    console.log("cards:", players[turn].cards);
     startFlow(findCard);
     if (players[turn].name !== "human") {
         player1.classList.add("notValid");
@@ -96,28 +118,31 @@ function handleCardClick(event) {
     }
 
 }
+
 function play(card) {
     const selectedCard = card;
     checkForWinner();
     console.log("player " + turn);
-    const cardIndex = players[turn].cards.findIndex((c) => c.id === selectedCard.id && c.color === selectedCard.color);
+    const cardIndex = players[turn].cards.findIndex((c) => c.uid === selectedCard.uid);
 
     let movingCard = "";
     let movingCardToappend = "";
 
-    if (players[turn].name === "computer") {
-        movingCard = document.querySelector(`.player${turn + 1} .flipcard[data-id="${card.id}"]`);
-        movingCardToappend = createCard(card.id, card.color);
+    if (players[turn].name === "computer" && !animation) {
+        movingCard = document.querySelector(`.player${turn + 1} .flipcard[data-uid="${card.uid}"]`);
+        movingCardToappend = createCard(card.id, card.color, card.uid);
     }
     else if (animation) {
         movingCard = dock;
-        movingCardToappend = createCard(card.id, card.color);
+        movingCardToappend = createCard(card.id, card.color, card.uid);
         animation = false;
+
     }
     else {
-        movingCard = document.querySelector(`.player${turn + 1} .card[data-id="${card.id}"]`);
+        movingCard = document.querySelector(`.player${turn + 1} .card[data-uid="${card.uid}"]`);
         movingCardToappend = movingCard;
     }
+    console.log(movingCard);
     console.log("I'm supposeed to move ", movingCardToappend);
     const playRect = playArea.getBoundingClientRect();
     const startRect = movingCard.getBoundingClientRect();
@@ -132,7 +157,6 @@ function play(card) {
     });
 
     movingCardToappend.addEventListener("transitionend", () => {
-        updateBoard();
         movingCardToappend.remove();
     });
 
@@ -176,6 +200,7 @@ function handleNoValidCard() {
     else {
         console.log(" I'm in novalid add " + turn);
         console.log(players[turn].cards);
+        console.log(addedCard);
         changeTurn();
         setTimer();
     }
@@ -224,10 +249,21 @@ function checkForWinner() {
     }
 }
 function handleNextTurn() {
-    if (winner) return;
+    if (winner) {
+        document.querySelector(".dashboard").classList.remove("hidden");
+        const message = document.querySelector(".dashcontainer .message h1");
+        if (saveWinner === 0) {
+            message.textContent = "Congratulations!!";
+        } else {
+            message.textContent = "Game Over!!";
+        } playButton.textContent = "Play Again";
+        return;
+    }
+
     const currentPlayer = players[turn];
     if (currentPlayer.name === "computer") {
         automatedPlayer();
+        setTimer();
     }
     else return;
 }
@@ -246,7 +282,7 @@ function startFlow(card) {
 function setTimer() {
     setTimeout(() => {
         updateBoard();
-
+        console.log("Updating board");
         setTimeout(() => {
             handleNextTurn();
         }, 800);
@@ -254,4 +290,8 @@ function setTimer() {
     }, 800);
 }
 dock.addEventListener("click", handleNoValidCard);
-init();
+playButton.addEventListener("click", () => {
+    const playersNum = document.querySelector(".playersnum").value;
+    const cardsNum = document.querySelector(".cardsNum").value;
+    init(cardsNum, playersNum);
+});
