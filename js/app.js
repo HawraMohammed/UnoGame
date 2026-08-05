@@ -1,4 +1,5 @@
 import { card } from "./data.js";
+/*-------------------constants and variables---------------------*/
 let players = [{ name: "human", cards: [], seat: 1 }];
 const colors = ["#FA2828", "#5190F5", "#FFFC63", "#61D45F"];
 let playAreaCard = { name: "playArea" };
@@ -6,23 +7,25 @@ let turn = 0;
 let winner = false;
 let saveWinner = 0;
 let animation = false;
-let uid = 0;
+let uid = 0; // unique id for each card
 const player1 = document.querySelector(".player1");
 const playArea = document.querySelector(".playArea");
 const dock = document.querySelector(".dock");
 const playButton = document.querySelector(".play");
+/*------------------------sound effects-------------------------*/
 const cardSound = new Audio("./js/card.mp3");
-cardSound.volume = 1;
 const backgroundSound = new Audio("./js/uno_1.mp3");
+const callUno = new Audio("./js/uno.mp3");
+const gameOver = new Audio("./js/gameover.mp3");
+const win = new Audio("./js/win.mp3");
+
+cardSound.volume = 1;
 backgroundSound.volume = 0.6;
 backgroundSound.loop = true;
-const callUno = new Audio("./js/uno.mp3");
 callUno.volume = 0.7;
-const gameOver = new Audio("./js/gameover.mp3");
 gameOver.volume = 1;
-const win = new Audio("./js/win.mp3");
 win.volume = 1;
-
+/*--------------------------Functions---------------------------*/
 function distributeCards(num, destination) {
     for (let i = 0; i < num; i++) {
         const randCard = card[Math.floor(Math.random() * (card.length - 1))];
@@ -44,9 +47,9 @@ function validateCard(card) {
 }
 function createCard(cardId, color = null, uid = null) {
     const cardElement = document.createElement("div");
+    // find the HTML structure for the card from data.js
     cardElement.innerHTML = card.find((c) => c.id === cardId).html;
     const cardwrapper = cardElement.firstElementChild;
-
     if (color !== null && cardId !== "filpedCard") {
         cardwrapper.style.backgroundColor = color;
         cardwrapper.style.color = color;
@@ -66,7 +69,7 @@ function updateBoard() {
     players.forEach((player) => {
         const domPlayer = document.querySelector(`.player${player.seat}`);
         domPlayer.innerHTML = "";
-        player.cards.forEach((card, cardIndex) => {
+        player.cards.forEach((card) => {
             let cardElement = "";
             if (player.name === "computer") {
                 cardElement = createCard("filpedCard", card.color, card.uid);
@@ -78,7 +81,7 @@ function updateBoard() {
                 }
                 cardElement.addEventListener("click", handleCardClick);
             }
-
+            // to prevent the overflow that may occur when cards number become bigger
             if (player.cards.length * 110 > 700) {
                 const overlap = (player.cards.length * 110 - 700) / (player.cards.length - 1);
                 cardElement.style.marginLeft = `-${overlap}px`;
@@ -89,6 +92,8 @@ function updateBoard() {
     playArea.appendChild(createCard(playAreaCard.id, playAreaCard.color));
 }
 function init(num, playerNum) {
+
+    // so player2 sets on the third seat so they face eachother
     if (playerNum === "2") {
         document.querySelector(".player3").classList.remove("hidden");
         players.push({ name: "computer", cards: [], seat: 3 });
@@ -105,6 +110,7 @@ function init(num, playerNum) {
     }
 
     distributeCards(1, playAreaCard);
+    // keep calling distributeCard until the card is a number
     while (!parseInt(playAreaCard.id)) { distributeCards(1, playAreaCard); }
 
     players.forEach((player) => {
@@ -118,9 +124,10 @@ function init(num, playerNum) {
 function handleCardClick(event) {
 
     const clickedCard = event.target.closest(".card").dataset;
-
+    // find the card that matches the clicked card using the unique id
     const findCard = players[turn].cards.find((card) => (String(card.uid) === String(clickedCard.uid)));
     startFlow(findCard);
+    // if the next turn is a computer do not allow the human to click his cards
     if (players[turn].name !== "human") {
         player1.classList.add("notValid");
         dock.classList.add("notValid2");
@@ -136,6 +143,7 @@ function play(card) {
     addAnimation(selectedCard);
 
     if (players[turn].cards.length === 2) { callUno.play(); }
+    // remove the selected card from the player's list
     players[turn].cards.splice(cardIndex, 1);
     switch (selectedCard.id) {
         case "t2":
@@ -164,6 +172,7 @@ function changeTurn() {
 function handleNoValidCard() {
     cardSound.play();
     distributeCards(1, players[turn]);
+    // select the last card that was added to the player's list (we just distributed it)
     const addedCard = players[turn].cards[players[turn].cards.length - 1];
     if (validateCard(addedCard)) {
         animation = true;
@@ -183,7 +192,7 @@ function chooseColor(onColorChosen) {
             color.style.backgroundColor = colors[index];
             color.addEventListener("click", () => {
                 chosenColor = colors[index];
-
+                // the method will be executed only after the user clicks a button
                 onColorChosen(chosenColor);
                 color.closest(".chooseColor").classList.add("hidden");
             });
@@ -197,9 +206,11 @@ function chooseColor(onColorChosen) {
 
 }
 function automatedPlayer() {
+    // find the first card that matches the conditions of the play area card
     const findValidCard = players[turn].cards.find((card) => validateCard(card));
     if (findValidCard === undefined) handleNoValidCard();
     else { startFlow(findValidCard); }
+    // allow the human player to play back
     if (players[turn].name === "human") {
         player1.classList.remove("notValid");
         dock.classList.remove("notValid2");
@@ -246,6 +257,7 @@ function handleNextTurn() {
 function startFlow(card) {
     cardSound.play();
     if (card.id === "t4" || card.id === "colorCard") {
+        // pass the callback function to be attached to the eventlistener for each color
         chooseColor((selectedColor) => {
             card.color = selectedColor;
             play(card);
@@ -254,6 +266,7 @@ function startFlow(card) {
 
         return;
     }
+    // this will apply to cards that already have color and do not need user input
     play(card);
     setTimer();
 }
@@ -270,6 +283,7 @@ function addAnimation(card, destination = playArea) {
     let movingCard = "";
     let movingCardToappend = "";
 
+    // select the clicked card
     if (players[turn].name === "computer" && !animation) {
         movingCard = document.querySelector(`.player${players[turn].seat} .flipcard[data-uid="${card.uid}"]`);
         movingCardToappend = createCard(card.id, card.color, card.uid);
@@ -284,20 +298,23 @@ function addAnimation(card, destination = playArea) {
         movingCard = document.querySelector(`.player${players[turn].seat} .card[data-uid="${card.uid}"]`);
         movingCardToappend = movingCard;
     }
-
+    // find coordinates of the clicked card and the destination
     const playRect = destination.getBoundingClientRect();
     const startRect = movingCard.getBoundingClientRect();
 
+    // make the clone relative to the browser
     movingCardToappend.style.position = "fixed";
+    // assign the position of the clone to be the same of the original card
     movingCardToappend.style.left = startRect.left + "px";
     movingCardToappend.style.top = startRect.top + "px";
     document.body.appendChild(movingCardToappend);
 
+    // change the position of the clone to be the same of the destination
     requestAnimationFrame(() => {
         movingCardToappend.style.left = playRect.left + "px";
         movingCardToappend.style.top = playRect.top + "px";
     });
-
+    //remove the clone
     movingCardToappend.addEventListener("transitionend", () => {
         movingCardToappend.remove();
     });
