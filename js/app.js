@@ -1,5 +1,6 @@
 import { card } from "./data.js";
-const players = [{ name: "human", cards: [] }];
+let players = [{ name: "human", cards: [], seat: 1 }];
+console.log("players at declaration:", players.length);
 const colors = ["#FA2828", "#5190F5", "#FFFC63", "#61D45F"];
 let playAreaCard = { name: "playArea" };
 let turn = 0;
@@ -33,8 +34,7 @@ function validateCard(card) {
     return (card.id === playAreaCard.id || card.color === playAreaCard.color || card.id === "t4" || card.id === "colorCard");
 
 }
-function createCard(cardId, color = null, uid = null
-) {
+function createCard(cardId, color = null, uid = null) {
     const cardElement = document.createElement("div");
     cardElement.innerHTML = card.find((c) => c.id === cardId).html;
     const cardwrapper = cardElement.firstElementChild;
@@ -55,8 +55,9 @@ function createCard(cardId, color = null, uid = null
 }
 function updateBoard() {
     playArea.innerHTML = "";
-    players.forEach((player, index) => {
-        const domPlayer = document.querySelector(`.player${index + 1}`);
+    console.log("Before init:", players);
+    players.forEach((player) => {
+        const domPlayer = document.querySelector(`.player${player.seat}`);
         domPlayer.innerHTML = "";
         player.cards.forEach((card, cardIndex) => {
             let cardElement = "";
@@ -76,23 +77,35 @@ function updateBoard() {
                 cardElement.style.marginLeft = `-${overlap}px`;
             }
 
-            console.log(index + 1, domPlayer.className);
+            console.log(domPlayer.className);
             domPlayer.appendChild(cardElement);
         });
     });
+    console.log(players);
     playArea.appendChild(createCard(playAreaCard.id, playAreaCard.color));
 }
 function init(num, playerNum) {
-    if (playerNum === 2) {
-        document.querySelector(".player2").classList.remove("hidden");
-        players.push({ name: "computer", cards: [] });
+    console.log(playerNum);
+    if (playerNum === "2") {
+        document.querySelector(".player3").classList.remove("hidden");
+        players.push({ name: "computer", cards: [], seat: 3 });
     }
     else {
-        for (let i = 0; i < playerNum - 1; i++) {
-            players.push({ name: "computer", cards: [] });
-            document.querySelector(`.player${i + 2}`).classList.remove("hidden");
+        document.querySelector(".player2").classList.remove("hidden");
+        document.querySelector(".player3").classList.remove("hidden");
+        players.push({ name: "computer", cards: [], seat: 2 });
+        players.push({ name: "computer", cards: [], seat: 3 });
+        if (playerNum === "4") {
+            document.querySelector(".player4").classList.remove("hidden");
+            players.push({ name: "computer", cards: [], seat: 4 });
         }
     }
+    console.log(document.querySelector(".player2").className);
+    console.log(document.querySelector(".player3").className);
+    console.log(document.querySelector(".player4").className);
+
+
+
     distributeCards(1, playAreaCard);
     while (!parseInt(playAreaCard.id)) { distributeCards(1, playAreaCard); }
 
@@ -116,7 +129,6 @@ function handleCardClick(event) {
     if (players[turn].name !== "human") {
         player1.classList.add("notValid");
         dock.classList.add("notValid2");
-        setTimer();
     }
 
 }
@@ -127,40 +139,7 @@ function play(card) {
     console.log("player " + turn);
     const cardIndex = players[turn].cards.findIndex((c) => c.uid === selectedCard.uid);
 
-    let movingCard = "";
-    let movingCardToappend = "";
-
-    if (players[turn].name === "computer" && !animation) {
-        movingCard = document.querySelector(`.player${turn + 1} .flipcard[data-uid="${card.uid}"]`);
-        movingCardToappend = createCard(card.id, card.color, card.uid);
-    }
-    else if (animation) {
-        movingCard = dock;
-        movingCardToappend = createCard(card.id, card.color, card.uid);
-        animation = false;
-
-    }
-    else {
-        movingCard = document.querySelector(`.player${turn + 1} .card[data-uid="${card.uid}"]`);
-        movingCardToappend = movingCard;
-    }
-    console.log(movingCard);
-    console.log("I'm supposeed to move ", movingCardToappend);
-    const playRect = playArea.getBoundingClientRect();
-    const startRect = movingCard.getBoundingClientRect();
-    document.body.appendChild(movingCardToappend);
-
-    movingCardToappend.style.position = "fixed";
-    movingCardToappend.style.left = startRect.left + "px";
-    movingCardToappend.style.top = startRect.top + "px";
-    requestAnimationFrame(() => {
-        movingCardToappend.style.left = playRect.left + "px";
-        movingCardToappend.style.top = playRect.top + "px";
-    });
-
-    movingCardToappend.addEventListener("transitionend", () => {
-        movingCardToappend.remove();
-    });
+    addAnimation(selectedCard);
 
     players[turn].cards.splice(cardIndex, 1);
     console.log(players[turn].cards);
@@ -181,6 +160,7 @@ function play(card) {
         default: changeTurn(); break;
     }
     console.log(players[turn].cards);
+    console.log(turn);
     playAreaCard.id = selectedCard.id;
     playAreaCard.color = selectedCard.color;
     console.log("selected:", selectedCard);
@@ -276,12 +256,13 @@ function startFlow(card) {
         chooseColor((selectedColor) => {
             card.color = selectedColor;
             play(card);
+            setTimer();
         });
 
         return;
     }
     play(card);
-
+    setTimer();
 }
 function setTimer() {
     setTimeout(() => {
@@ -293,9 +274,60 @@ function setTimer() {
 
     }, 800);
 }
+function addAnimation(card, destination = playArea) {
+    let movingCard = "";
+    let movingCardToappend = "";
+
+    if (players[turn].name === "computer" && !animation) {
+        movingCard = document.querySelector(`.player${players[turn].seat} .flipcard[data-uid="${card.uid}"]`);
+        movingCardToappend = createCard(card.id, card.color, card.uid);
+    }
+    else if (animation) {
+        movingCard = dock;
+        movingCardToappend = createCard(card.id, card.color, card.uid);
+        animation = false;
+
+    }
+    else {
+        movingCard = document.querySelector(`.player${players[turn].seat} .card[data-uid="${card.uid}"]`);
+        movingCardToappend = movingCard;
+    }
+    console.log(movingCard);
+    console.log("I'm supposeed to move ", movingCardToappend);
+    const playRect = destination.getBoundingClientRect();
+    const startRect = movingCard.getBoundingClientRect();
+
+    movingCardToappend.style.position = "fixed";
+    movingCardToappend.style.left = startRect.left + "px";
+    movingCardToappend.style.top = startRect.top + "px";
+    document.body.appendChild(movingCardToappend);
+
+    requestAnimationFrame(() => {
+        movingCardToappend.style.left = playRect.left + "px";
+        movingCardToappend.style.top = playRect.top + "px";
+    });
+
+    movingCardToappend.addEventListener("transitionend", () => {
+        movingCardToappend.remove();
+    });
+}
+function setUp() {
+    players = [{ name: "human", cards: [], seat: 1 }];
+    playAreaCard = { name: "playArea" };
+    turn = 0;
+    winner = false;
+    saveWinner = 0;
+    animation = false;
+    uid = 0;
+    document.querySelector(".player2").classList.add("hidden");
+    document.querySelector(".player3").classList.add("hidden");
+    document.querySelector(".player4").classList.add("hidden");
+
+}
 dock.addEventListener("click", handleNoValidCard);
 playButton.addEventListener("click", () => {
     const playersNum = document.querySelector(".playersnum").value;
     const cardsNum = document.querySelector(".cardsNum").value;
+    setUp();
     init(cardsNum, playersNum);
 });
