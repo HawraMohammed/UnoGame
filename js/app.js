@@ -219,7 +219,7 @@ function handleNextTurn() {
         if (saveWinner === 0) {
             message.textContent = "Congratulations!!";
             message.style.marginRight = "0px";
-            message.style.fontSize = "15px";
+            message.style.fontSize = "12px";
 
         } else {
             message.textContent = "Game Over!!";
