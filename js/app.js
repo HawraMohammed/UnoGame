@@ -18,6 +18,10 @@ backgroundSound.volume = 0.6;
 backgroundSound.loop = true;
 const callUno = new Audio("./js/uno.mp3");
 callUno.volume = 0.7;
+const gameOver = new Audio("./js/gameover.mp3");
+gameOver.volume = 1;
+const win = new Audio("./js/win.mp3");
+win.volume = 1;
 
 function distributeCards(num, destination) {
     for (let i = 0; i < num; i++) {
@@ -220,11 +224,13 @@ function handleNextTurn() {
             message.textContent = "Congratulations!!";
             message.style.marginRight = "0px";
             message.style.fontSize = "12px";
+            win.play();
 
         } else {
             message.textContent = "Game Over!!";
             message.style.fontSize = "20px";
             message.style.marginRight = "0px";
+            gameOver.play();
         } playButton.textContent = "Play Again";
         playButton.style.fontSize = "15px";
         return;
