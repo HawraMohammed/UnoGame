@@ -8,6 +8,9 @@
     <link href="./css/style.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <script type="module" src="./js/app.js" defer></script>
 </head>
 
@@ -38,7 +41,7 @@
     <div class="player2 hidden"></div>
 
     <div class="chooseColor hidden">
-        <div class="message">
+        <div id="message">
             <h1>Choose a color</h1>
         </div>
         <div class="colors">
@@ -50,14 +53,15 @@
     </div>
     <div class="dashboard">
         <div class="dashcontainer">
+
             <div class="message">
-                <h1>Welcome to UNO game</h1>
+                <h1> UNO </h1>
             </div>
             <div class="options">
-                <div class="choice"><label>choose number of cards</label>
+                <div class="choice"><label>cards</label>
                     <input type="number" class="cardsNum" min="5" max="9" value="5">
                 </div>
-                <div class="choice"><label>choose number of players</label>
+                <div class="choice"><label>players</label>
                     <input type="number" class="playersnum" min="2" max="4" value="2">
                 </div>
             </div>

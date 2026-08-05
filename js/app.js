@@ -13,7 +13,12 @@ const playArea = document.querySelector(".playArea");
 const dock = document.querySelector(".dock");
 const playButton = document.querySelector(".play");
 const cardSound = new Audio("./js/card.mp3");
-cardSound.volume = 0.6;
+cardSound.volume = 1;
+const backgroundSound = new Audio("./js/uno_1.mp3");
+backgroundSound.volume = 0.6;
+backgroundSound.loop = true;
+const callUno = new Audio("./js/uno.mp3");
+callUno.volume = 0.7;
 
 function distributeCards(num, destination) {
     for (let i = 0; i < num; i++) {
@@ -140,7 +145,7 @@ function play(card) {
     const cardIndex = players[turn].cards.findIndex((c) => c.uid === selectedCard.uid);
 
     addAnimation(selectedCard);
-
+    if (players[turn].cards.length === 2) { callUno.play(); }
     players[turn].cards.splice(cardIndex, 1);
     console.log(players[turn].cards);
     switch (selectedCard.id) {
@@ -235,11 +240,15 @@ function handleNextTurn() {
     if (winner) {
         document.querySelector(".dashboard").classList.remove("hidden");
         const message = document.querySelector(".dashcontainer .message h1");
+
         if (saveWinner === 0) {
             message.textContent = "Congratulations!!";
+            message.style.fontSize = "15px";
+
         } else {
-            message.textContent = "Game Over!!";
+            message.textContent = "Game <br> Over!!";
         } playButton.textContent = "Play Again";
+        playButton.style.fontSize = "15px";
         return;
     }
 
@@ -326,6 +335,7 @@ function setUp() {
 }
 dock.addEventListener("click", handleNoValidCard);
 playButton.addEventListener("click", () => {
+    backgroundSound.play();
     const playersNum = document.querySelector(".playersnum").value;
     const cardsNum = document.querySelector(".cardsNum").value;
     setUp();
