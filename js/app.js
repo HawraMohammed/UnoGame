@@ -313,7 +313,8 @@ function setUp() {
     document.querySelector(".player2").classList.add("hidden");
     document.querySelector(".player3").classList.add("hidden");
     document.querySelector(".player4").classList.add("hidden");
-
+    player1.classList.remove("notValid");
+    dock.classList.remove("notValid2");
 }
 dock.addEventListener("click", handleNoValidCard);
 playButton.addEventListener("click", () => {
