@@ -10,7 +10,7 @@ The project focuses on creating an interactive game experience with card movemen
 ## 📸 Screenshots
 
 ![snapshoots](playArea.png)
-![snapshoots](startpage.png)
+![snapshoots](start page.png)
 
 ## ✨ Features
 
@@ -25,8 +25,26 @@ The project focuses on creating an interactive game experience with card movemen
 
 ## 🛠️ Technologies Used
 
-- **HTML5** — Structure of the game
-- **CSS3** — Styling, animations, gradients, and visual effects
+- **HTML** — Structure of the game
+- **CSS** — Styling, animations, gradients, and visual effects
 - **JavaScript (ES6)** — Game logic, DOM manipulation, and interactions
 
-## 📂 Project Structure
+## 📚 Attributions
+
+The following resources were used during development:
+
+- **Fonts**
+  - Archivo font by Google Fonts  
+    https://fonts.google.com/specimen/Archivo
+  - Press Start 2P font by Google Fonts  
+    https://fonts.google.com/specimen/Press+Start+2P
+
+- **Icons**
+  - Font Awesome icons  
+    https://fontawesome.com/
+
+    ## 🛠️ 🚀 Future Development 
+
+- Add a timer to restrict the response time for the human player
+- Make accessible through mobile phones and other devices
+
