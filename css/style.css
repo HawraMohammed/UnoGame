@@ -111,11 +111,15 @@
 }
 
 body {
-    background: radial-gradient(circle,
-            #24569a 0%,
-            #163d75 45%,
-            #0a2348 75%,
-            #04152e 100%);
+    background:
+        radial-gradient(circle at center,
+            rgba(23, 107, 181, 0.85) 0%,
+            rgba(11, 79, 145, 0.85) 35%,
+            rgba(7, 53, 99, 0.85) 70%,
+            rgba(2, 26, 56, 0.9) 100%),
+        url("noise2.png");
+    background-size: cover;
+
     width: 100%;
     height: 100%;
     display: flex;
@@ -374,7 +378,9 @@ body {
     border-radius: 10px;
     padding: 10px;
     font-family: "Verdana";
-    color: rgba(40, 14, 41, 0.87);
+    gap: 15px;
+    color: #630330;
+    box-shadow: 0px 0px 15px rgba(250, 250, 51);
 
 }
 
@@ -437,10 +443,6 @@ body {
 
 }
 
-.dashcontainer .ovalflip {
-    margin-bottom: 1000px;
-}
-
 .options {
     display: flex;
     flex-direction: column;
@@ -463,13 +465,24 @@ input[type="number"] {
     height: 50px;
     font-size: 25px;
     text-align: center;
-    color: #953553;
+    color: #800020;
     border-radius: 10px;
     border: none;
     font-family: "Press Start 2P", cursive;
     background-color: #FFFAA0;
     font-weight: bold;
+    box-shadow: 0px 0px 15px rgba(250, 250, 51);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    caret-color: transparent;
+}
 
+
+input[type="number"]:focus {
+    border: none;
+    outline: none;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -489,7 +502,8 @@ input[type="number"]::-webkit-outer-spin-button {
     font-family: "Press Start 2P", cursive;
     font-weight: bold;
     color: #483248;
-
+    border: none;
+    box-shadow: 5px 5px 5px rgba(218, 112, 214);
 }
 
 .play:hover {
@@ -497,12 +511,15 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .message {
+    margin-bottom: 50px;
     margin-right: 250px;
     font-size: 30px;
 }
 
 #message {
-    font-size: 15px;
+    font-size: 12px;
+    font-family: "Press Start 2P", cursive;
+
 }
 
 .hidden {
