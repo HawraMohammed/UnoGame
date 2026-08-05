@@ -9,7 +9,8 @@ The project focuses on creating an interactive game experience with card movemen
 
 ## 📸 Screenshots
 
-![snapshoots](screenshots/game.png)
+![snapshoots](playArea.png)
+![snapshoots](startpage.png)
 
 ## ✨ Features
 
